@@ -1,10 +1,14 @@
 import { gql, ApolloError, ValidationError } from "apollo-server";
 import * as admin from "firebase-admin";
 import { User, Tweet } from "./models";
-const serviceAccount = require("../service-account.json");
+require("dotenv").config();
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert({
+    projectId: process.env.PROJECT_ID,
+    clientEmail: process.env.CLIENT_EMAIL,
+    privateKey: process.env.PRIVATE_KEY
+  })
 });
 
 // export const typeDefs = gql`
