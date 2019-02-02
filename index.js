@@ -1,4 +1,5 @@
-const { ApolloServer, gql } = require("apollo-server");
+// const { ApolloServer, gql } = require("apollo-server");
+import { ApolloServer, gql } from "apollo-server";
 
 // The GraphQL schema
 const typeDefs = gql`
