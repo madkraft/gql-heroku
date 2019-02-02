@@ -1,0 +1,26 @@
+{
+  "name": "functions",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json",
+    "build": "tsc",
+    "serve": "npm run build && node lib/index.js",
+    "start": "node lib/index.js"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "apollo-server": "^2.3.3",
+    "dotenv": "^6.2.0",
+    "firebase-admin": "^6.5.1",
+    "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.0.5",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
+  },
+  "private": true,
+  "engines": {
+    "node": "8"
+  }
+}
