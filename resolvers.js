@@ -1,6 +1,5 @@
-import { ApolloError, ValidationError } from "apollo-server";
-import * as admin from "firebase-admin";
-import { User, Tweet } from "./models";
+const apollo = require("apollo-server");
+const admin = require("firebase-admin");
 require("dotenv").config();
 
 admin.initializeApp({
@@ -11,9 +10,9 @@ admin.initializeApp({
   })
 });
 
-export const resolvers = {
+const resolvers = {
   User: {
-    async tweets(user: User) {
+    async tweets(user) {
       try {
         const userTweets = await admin
           .firestore()
@@ -23,12 +22,12 @@ export const resolvers = {
 
         return userTweets.docs.map((tweet) => tweet.data());
       } catch (error) {
-        throw new ApolloError(error);
+        throw new apollo.ApolloError(error);
       }
     }
   },
   Tweets: {
-    async user(tweet: Tweet) {
+    async user(tweet) {
       try {
         const tweetAuthor = await admin
           .firestore()
@@ -37,7 +36,7 @@ export const resolvers = {
 
         return tweetAuthor.data();
       } catch (error) {
-        throw new ApolloError(error);
+        throw new apollo.ApolloError(error);
       }
     }
   },
@@ -59,10 +58,12 @@ export const resolvers = {
 
         const user = userDoc.data();
 
-        return user || new ValidationError("User ID not found");
+        return user || new apollo.ValidationError("User ID not found");
       } catch (error) {
-        throw new ApolloError(error);
+        throw new apollo.ApolloError(error);
       }
     }
   }
 };
+
+module.exports = resolvers;

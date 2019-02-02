@@ -1,4 +1,4 @@
-import { configureServer } from "./server";
+const configureServer = require("./server");
 
 const server = configureServer();
 
