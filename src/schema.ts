@@ -11,24 +11,6 @@ admin.initializeApp({
   })
 });
 
-// export const typeDefs = gql`
-//   type Query {
-//     tweets: [String]!
-//     user(id: String!): String!
-//   }
-// `;
-
-// export const resolvers = {
-//   Query: {
-//     tweets() {
-//       return ["hello tweet"];
-//     },
-//     user(_: undefined, args: { id: string }) {
-//       return `USERID is ${args.id}`;
-//     }
-//   }
-// };
-
 export const typeDefs = gql`
   type User {
     id: ID!

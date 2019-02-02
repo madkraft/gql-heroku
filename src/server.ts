@@ -7,19 +7,11 @@ export function configureServer() {
     typeDefs,
     resolvers,
     playground: true,
-    // playground: {
-    //   endpoint: "https://us-central1-articles.cloudfunctions.net/api/graphql"
-    // },
-    // engine: {
-    //   apiKey: process.env.ENGINE_API_KEY
-    // },
+    engine: {
+      apiKey: process.env.ENGINE_API_KEY
+    },
     introspection: true
   });
-
-  // server.applyMiddleware({
-  //   app,
-  //   cors: false
-  // });
 
   return server;
 }
