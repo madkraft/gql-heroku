@@ -6,7 +6,9 @@ export function configureServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    playground: true,
+    playground: {
+      endpoint: "https://articles-graphql.herokuapp.com/graphql"
+    },
     engine: {
       apiKey: process.env.ENGINE_API_KEY
     },
