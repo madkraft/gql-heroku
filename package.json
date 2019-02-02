@@ -3,7 +3,8 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
-    "start": "node lib/index.js"
+    "start": "node lib/index.js",
+    "serve": "npm run build && node lib/index.js"
   },
   "main": "lib/index.js",
   "dependencies": {
