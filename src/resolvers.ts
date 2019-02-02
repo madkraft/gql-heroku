@@ -1,18 +1,15 @@
-const apollo = require("apollo-server");
-const admin = require("firebase-admin");
-require("dotenv").config();
+import { ApolloError, ValidationError } from "apollo-server-express";
+import * as admin from "firebase-admin";
+import { User, Tweet } from "./models";
+const serviceAccount = require("../service-account.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.PROJECT_ID,
-    clientEmail: process.env.CLIENT_EMAIL,
-    privateKey: process.env.PRIVATE_KEY
-  })
+  credential: admin.credential.cert(serviceAccount)
 });
 
-const resolvers = {
+export const resolvers = {
   User: {
-    async tweets(user) {
+    async tweets(user: User) {
       try {
         const userTweets = await admin
           .firestore()
@@ -22,12 +19,12 @@ const resolvers = {
 
         return userTweets.docs.map((tweet) => tweet.data());
       } catch (error) {
-        throw new apollo.ApolloError(error);
+        throw new ApolloError(error);
       }
     }
   },
   Tweets: {
-    async user(tweet) {
+    async user(tweet: Tweet) {
       try {
         const tweetAuthor = await admin
           .firestore()
@@ -36,7 +33,7 @@ const resolvers = {
 
         return tweetAuthor.data();
       } catch (error) {
-        throw new apollo.ApolloError(error);
+        throw new ApolloError(error);
       }
     }
   },
@@ -58,12 +55,10 @@ const resolvers = {
 
         const user = userDoc.data();
 
-        return user || new apollo.ValidationError("User ID not found");
+        return user || new ValidationError("User ID not found");
       } catch (error) {
-        throw new apollo.ApolloError(error);
+        throw new ApolloError(error);
       }
     }
   }
 };
-
-module.exports = resolvers;
