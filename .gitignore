@@ -1,6 +1,2 @@
 node_modules/
-lib/
-service-account.json
 .env
-**/*.js
-**/*.js.map
