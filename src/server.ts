@@ -6,9 +6,7 @@ export function configureServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    // playground: {
-    //   endpoint: "process.env.API_ENDPOINT"
-    // },
+    playground: true,
     engine: {
       apiKey: process.env.ENGINE_API_KEY
     },
