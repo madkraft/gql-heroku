@@ -12,3 +12,10 @@ export interface Tweet {
   user: User;
   likes: number;
 }
+
+export interface Article {
+  title: string;
+  url: string;
+  tags?: string[];
+  starred?: boolean;
+}

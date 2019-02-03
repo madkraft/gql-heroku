@@ -1,6 +1,6 @@
 import { gql, ApolloError, ValidationError } from "apollo-server";
 import * as admin from "firebase-admin";
-import { User, Tweet } from "./models";
+import { User, Tweet, Article } from "./models";
 require("dotenv").config();
 
 admin.initializeApp({
@@ -10,6 +10,8 @@ admin.initializeApp({
     privateKey: process.env.PRIVATE_KEY.replace(/\\n/g, "\n")
   })
 });
+const settings = { timestampsInSnapshots: true };
+admin.firestore().settings(settings);
 
 export const typeDefs = gql`
   type User {
@@ -27,9 +29,23 @@ export const typeDefs = gql`
     likes: Int!
   }
 
+  type Article {
+    title: String!
+    url: String!
+    tags: [String!]
+    starred: Boolean
+    createTime: String!
+    id: ID!
+  }
+
   type Query {
     tweets: [Tweets]
-    user(id: String!): User
+    user(id: ID!): User
+    articles(starred: Boolean): [Article]
+  }
+
+  type Mutation {
+    starArticle(id: ID!): Article
   }
 `;
 
@@ -82,6 +98,43 @@ export const resolvers = {
         const user = userDoc.data();
 
         return user || new ValidationError("User ID not found");
+      } catch (error) {
+        throw new ApolloError(error);
+      }
+    },
+    async articles(_, args) {
+      const articles = await admin.firestore().collection("articles");
+      let articlesCollection: FirebaseFirestore.QuerySnapshot;
+
+      if (args.starred !== undefined) {
+        articlesCollection = await articles.where("starred", "==", args.starred).get();
+      } else {
+        articlesCollection = await articles.get();
+      }
+
+      return articlesCollection.docs.map((article) => {
+        return {
+          ...article.data(),
+          createTime: article.createTime.toDate(),
+          id: article.id
+        };
+      });
+    }
+  },
+  Mutation: {
+    async starArticle(_, args: { id: string }) {
+      try {
+        const articleRef = admin.firestore().doc(`articles/${args.id}`);
+
+        let articleDoc = await articleRef.get();
+        const article = articleDoc.data() as Article;
+        await articleRef.update({ starred: !article.starred });
+
+        articleDoc = await articleRef.get();
+        return {
+          ...articleDoc.data(),
+          id: articleDoc.id
+        };
       } catch (error) {
         throw new ApolloError(error);
       }
